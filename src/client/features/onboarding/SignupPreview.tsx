@@ -175,13 +175,15 @@ export function SignupPreview({
             }
           >
             <div className="mb-4 flex items-center gap-2 text-xs font-medium text-base-content/55">
-              <span>OpenSEO plugin</span>
+              <span>Sightline plugin</span>
               <span aria-hidden="true">·</span>
               <span>MCP + skills</span>
             </div>
             <CopyButton
               primary
-              value={getAgentSetupPrompt("https://app.openseo.so")}
+              value={getAgentSetupPrompt(
+                typeof window === "undefined" ? "" : window.location.origin,
+              )}
               label="Copy setup prompt"
               successMessage="Setup prompt copied"
             />

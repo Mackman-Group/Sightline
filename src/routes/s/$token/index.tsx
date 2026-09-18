@@ -11,11 +11,6 @@ import { loadSharePage } from "@/server/features/reports/sharePage";
 // that endpoint bounces anyone who opens it top-level back here, so shared
 // content always carries this chrome.
 
-const MARKETING_URL = "https://openseo.so/?utm_source=shared_report";
-// The marketing site's card. Absolute because a link preview crawler resolves
-// og:image against nothing, and the app domain does not serve this asset.
-const SOCIAL_CARD_URL = "https://openseo.so/social-card.jpg";
-
 // The share sheet on touch devices only; on desktop macOS anchors it to the
 // window rather than the button, so the clipboard is used instead.
 async function shareLink(title: string) {
@@ -41,7 +36,7 @@ export const Route = createFileRoute("/s/$token/")({
   staleTime: Infinity,
   head: ({ loaderData: data }) => {
     if (!data) return {};
-    const title = `${data.title} · OpenSEO`;
+    const title = `${data.title} · Sightline`;
     return {
       meta: [
         { title },
@@ -49,7 +44,7 @@ export const Route = createFileRoute("/s/$token/")({
         // The raw endpoint sets X-Robots-Tag for the same reason.
         { name: "robots", content: "noindex, nofollow" },
         { property: "og:type", content: "article" },
-        { property: "og:site_name", content: "OpenSEO" },
+        { property: "og:site_name", content: "Sightline" },
         { property: "og:title", content: data.title },
         { name: "twitter:title", content: data.title },
         ...(data.description
@@ -59,10 +54,6 @@ export const Route = createFileRoute("/s/$token/")({
             ]
           : []),
         { property: "og:url", content: data.url },
-        { property: "og:image", content: SOCIAL_CARD_URL },
-        { property: "og:image:width", content: "1200" },
-        { property: "og:image:height", content: "630" },
-        { name: "twitter:card", content: "summary_large_image" },
       ],
     };
   },
@@ -81,14 +72,6 @@ function SharedReportMessage({
     <div className="flex min-h-full flex-col items-center justify-center gap-3 px-6 text-center">
       <h1 className="text-lg font-medium">{heading}</h1>
       <p className="max-w-md text-sm text-base-content/60">{detail}</p>
-      <a
-        href={MARKETING_URL}
-        target="_blank"
-        rel="noreferrer"
-        className="btn btn-primary btn-sm"
-      >
-        Try OpenSEO
-      </a>
     </div>
   );
 }
@@ -123,7 +106,7 @@ function SharedReportPage() {
         <div className="w-full min-w-0 sm:w-auto sm:flex-1">
           <h1 className="truncate text-sm font-medium">{data.title}</h1>
           <p className="text-xs text-base-content/50">
-            Made with OpenSEO · Updated {formatRelativeTime(data.updatedAt)}
+            Made with Sightline · Updated {formatRelativeTime(data.updatedAt)}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
@@ -135,14 +118,6 @@ function SharedReportPage() {
             <Share2 className="size-4" />
             <span className="hidden sm:inline">Share</span>
           </button>
-          <a
-            href={MARKETING_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="btn btn-primary btn-sm"
-          >
-            Try OpenSEO
-          </a>
         </div>
       </header>
       <ReportViewer

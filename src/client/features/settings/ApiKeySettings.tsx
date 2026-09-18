@@ -18,9 +18,7 @@ export function ApiKeySettings() {
   const [createdKey, setCreatedKey] = useState<string | null>(null);
 
   const mcpUrl =
-    typeof window === "undefined"
-      ? "https://app.openseo.so/mcp"
-      : `${window.location.origin}/mcp`;
+    typeof window === "undefined" ? "/mcp" : `${window.location.origin}/mcp`;
 
   const apiKeysQuery = useQuery({
     queryKey: ["apiKeys"],

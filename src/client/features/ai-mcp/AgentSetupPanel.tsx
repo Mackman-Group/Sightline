@@ -2,7 +2,7 @@ import { Package } from "lucide-react";
 import { CopyButton } from "./SetupControls";
 
 export const AGENT_SETUP_DESCRIPTION =
-  "Paste this prompt into your agent to automatically configure OpenSEO for you.";
+  "Paste this prompt into your agent to automatically configure Sightline for you.";
 
 export function AgentSetupPanel({
   prompt,
@@ -19,7 +19,7 @@ export function AgentSetupPanel({
             <Package className="size-5 text-base-content/70" />
           </span>
           <div>
-            <p className="text-sm font-medium">OpenSEO plugin</p>
+            <p className="text-sm font-medium">Sightline plugin</p>
             <p className="mt-1 text-xs text-base-content/55">
               MCP connection + SEO skills
             </p>

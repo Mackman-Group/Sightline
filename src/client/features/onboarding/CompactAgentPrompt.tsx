@@ -14,7 +14,9 @@ export function CompactAgentPrompt({
   onBack: () => void;
   onFinish: () => void;
 }) {
-  const prompt = getAgentSetupPrompt("https://app.openseo.so");
+  const prompt = getAgentSetupPrompt(
+    typeof window === "undefined" ? "" : window.location.origin,
+  );
   const copy = (
     <div className="[&>button]:h-11 [&>button]:w-full [&>button]:gap-2 [&>button]:text-sm">
       <CopyButton
@@ -42,7 +44,7 @@ export function CompactAgentPrompt({
       {treatment === "simple" && (
         <>
           <div className="mb-5 flex items-center justify-between gap-3">
-            <span className="text-sm font-medium">OpenSEO plugin</span>
+            <span className="text-sm font-medium">Sightline plugin</span>
             <span className="rounded-md border border-base-300 px-2 py-1 text-xs text-base-content/60">
               MCP + skills
             </span>
@@ -59,11 +61,11 @@ export function CompactAgentPrompt({
                 <FileText className="size-3.5 text-base-content/60" /> Setup
                 prompt
               </span>
-              <span className="text-xs text-base-content/45">OpenSEO</span>
+              <span className="text-xs text-base-content/45">Sightline</span>
             </div>
             <div className="p-5">
               <p className="text-sm font-medium">
-                Set up OpenSEO in this agent.
+                Set up Sightline in this agent.
               </p>
               <p className="mt-2 text-xs leading-relaxed text-base-content/60">
                 Detect the agent. Install the plugin (MCP + skills).

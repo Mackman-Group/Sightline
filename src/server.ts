@@ -23,7 +23,6 @@ import {
   AUTUMN_WEBHOOK_PATH,
   handleAutumnWebhookRequest,
 } from "@/server/billing/autumn-webhook";
-import { sweepDubReferredOrganizations } from "@/server/referrals/dub";
 import { maybeSendSelfHostHeartbeat } from "@/server/lib/self-host-telemetry";
 import { handleGdprStorageErasure } from "@/server/gdpr/storage-erasure";
 import { GDPR_STORAGE_ERASURE_PATH } from "@/shared/gdpr-erasure";
@@ -204,14 +203,6 @@ export default {
           // The sweep only advances past live records via deletions; a
           // persistent incomplete scan means the keyspace outgrew the batch.
           console.warn("[mcp-oauth] purge did not cover the full keyspace");
-        }
-
-        // Daily referral-sale sweep: catches paid Autumn invoices the
-        // billing.updated webhook path misses (renewals, one-time top-ups).
-        try {
-          await sweepDubReferredOrganizations();
-        } catch (err) {
-          console.error("[cron] Dub referral sale sweep failed:", err);
         }
       }
       return;

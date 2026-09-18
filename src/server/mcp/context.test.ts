@@ -14,7 +14,7 @@ const applicationContext = {
   baseUrl: "https://open-seo.test",
 };
 
-describe("OpenSEO tool auth context", () => {
+describe("Sightline tool auth context", () => {
   it("stores only application-specific identity in Workers OAuth props", () => {
     const props = createWorkersOAuthMcpProps(applicationContext);
 

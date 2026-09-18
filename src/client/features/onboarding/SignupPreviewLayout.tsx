@@ -39,7 +39,7 @@ export function SignupPreviewLayout({
   const brand = (
     <div className="flex items-center gap-2 text-sm font-semibold">
       <img src="/transparent-logo.png" alt="" className="size-7" />
-      OpenSEO
+      Sightline
     </div>
   );
   const milestones = (

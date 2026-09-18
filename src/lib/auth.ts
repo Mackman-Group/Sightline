@@ -21,12 +21,6 @@ import {
 import { resolveSignInHostedOrganization } from "@/server/auth/default-hosted-organization";
 import { onInvitationAccepted } from "@/server/auth/invited-member";
 import { AuthRepository } from "@/server/auth/repositories/AuthRepository";
-import { captureDubReferralSignup } from "@/server/referrals/dub";
-import {
-  sendHostedPasswordResetEmail,
-  sendHostedVerificationEmail,
-  upsertHostedSignupContact,
-} from "@/server/email/loops";
 
 const hostedBaseUrlSchema = z
   .string()
@@ -164,11 +158,10 @@ function createAuth() {
       requireEmailVerification: !bypassEmail,
       resetPasswordTokenExpiresIn: 60 * 60,
       revokeSessionsOnPasswordReset: true,
-      sendResetPassword: async ({ user, url }) => {
-        await sendHostedPasswordResetEmail({
-          email: user.email,
-          resetUrl: url,
-        });
+      sendResetPassword: async () => {
+        throw new Error(
+          "Hosted password reset email is not configured in this deployment.",
+        );
       },
     },
     emailVerification: bypassEmail
@@ -176,11 +169,10 @@ function createAuth() {
       : {
           sendOnSignUp: true,
           autoSignInAfterVerification: true,
-          sendVerificationEmail: async ({ user, url }) => {
-            await sendHostedVerificationEmail({
-              email: user.email,
-              confirmationUrl: url,
-            });
+          sendVerificationEmail: async () => {
+            throw new Error(
+              "Hosted verification email is not configured in this deployment.",
+            );
           },
         },
     socialProviders: getSocialProviders(),
@@ -225,12 +217,6 @@ function createAuth() {
             }
             return { data: user };
           },
-          after: async (user, ctx) => {
-            await syncHostedSignupContact(user);
-            if (isHostedAuthMode(env.AUTH_MODE)) {
-              await captureDubReferralSignup(user.id, ctx?.request);
-            }
-          },
         },
       },
       session: {
@@ -265,26 +251,6 @@ function createAuth() {
 }
 
 let authInstance: ReturnType<typeof createAuth> | null = null;
-
-async function syncHostedSignupContact(user: {
-  id: string;
-  email: string;
-  name?: string | null;
-}) {
-  try {
-    await upsertHostedSignupContact({
-      userId: user.id,
-      email: user.email,
-      name: user.name,
-    });
-  } catch (error) {
-    console.error("Failed to sync Loops profile after user creation:", {
-      userId: user.id,
-      email: user.email,
-      error,
-    });
-  }
-}
 
 function getTrustedOrigins(baseUrl: string) {
   const trustedOrigins = [baseUrl];
@@ -364,19 +330,9 @@ function getGoogleSocialProviderConfig() {
   };
 }
 
-function hasHostedAuthEmailConfig() {
-  const loopsVars = [
-    "LOOPS_API_KEY",
-    "LOOPS_TRANSACTIONAL_VERIFY_EMAIL_ID",
-    "LOOPS_TRANSACTIONAL_RESET_PASSWORD_ID",
-  ];
-
-  return loopsVars.every((name) => {
-    const value: unknown = Reflect.get(env, name);
-    return typeof value === "string" && value.trim() !== "";
-  });
-}
-
+// This fork has no hosted transactional email provider wired up, so hosted
+// mode can only run with email verification bypassed — sendResetPassword and
+// sendVerificationEmail above throw if hosted mode is ever used without it.
 export function hasHostedAuthConfig() {
   try {
     getHostedBaseUrl();
@@ -384,8 +340,7 @@ export function hasHostedAuthConfig() {
     getGoogleSocialProviderConfig();
     return (
       hasHostedTurnstileConfig(env) &&
-      (Reflect.get(env, "BYPASS_EMAIL_VERIFICATION") === "true" ||
-        hasHostedAuthEmailConfig())
+      Reflect.get(env, "BYPASS_EMAIL_VERIFICATION") === "true"
     );
   } catch {
     return false;

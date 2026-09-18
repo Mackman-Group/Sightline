@@ -72,7 +72,7 @@ async function handleSharedReportRequest(
   if (!report || report.archived) return notShared();
 
   // The document is only ever reachable inside the wrapper page's frame, so
-  // shared content always carries OpenSEO's chrome; there is no print mode
+  // shared content always carries Sightline's chrome; there is no print mode
   // here, because a cancelled print dialog would leave a bare report open
   // top-level on the app domain. Members print from the app. The redirect
   // needs the header to say the request is top-level: a client that sends no

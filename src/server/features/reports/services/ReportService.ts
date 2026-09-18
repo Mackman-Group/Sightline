@@ -253,7 +253,7 @@ async function shareReport(params: ShareParams): Promise<ReportMetadata> {
   if (!(await sharesEnabled())) {
     throw new AppError(
       "VALIDATION_ERROR",
-      "Sharing is only available on hosted OpenSEO.",
+      "Sharing is only available on hosted Sightline.",
     );
   }
 
