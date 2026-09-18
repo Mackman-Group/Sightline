@@ -14,12 +14,6 @@ vi.mock("@/server/auth/repositories/AuthRepository", () => ({
   AuthRepository: mocks,
 }));
 
-// Referral pin repair is fire-and-forget KV bookkeeping; mocking it keeps
-// `cloudflare:workers` out of this module graph.
-vi.mock("@/server/referrals/dub", () => ({
-  markDubReferredOrganization: vi.fn(),
-}));
-
 describe("resolveSignInHostedOrganization", () => {
   beforeEach(() => {
     mocks.getLastActiveOrganizationId.mockResolvedValue(null);

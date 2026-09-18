@@ -39,7 +39,7 @@ function AuthErrorPage() {
         }
       >
         <Link to="/" className="btn btn-soft w-full">
-          Back to OpenSEO
+          Back to Sightline
         </Link>
       </AuthPageCard>
     </AuthPageShell>

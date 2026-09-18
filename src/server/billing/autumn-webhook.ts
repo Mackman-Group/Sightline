@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { getRequiredEnvValue } from "@/server/lib/runtime-env";
 import { captureServerError } from "@/server/lib/posthog";
-import { trackDubSalesForOrganization } from "@/server/referrals/dub";
 import { syncAutumnCustomerStatus } from "./customer-status-sync";
 import { verifySvixSignature } from "./svix";
 
@@ -74,10 +73,6 @@ export async function handleAutumnWebhookRequest(request: Request) {
       );
       return json({ error: "Webhook processing failed" }, 500);
     }
-
-    // Referral revenue attribution; internally fire-and-forget and can never
-    // fail the webhook response.
-    await trackDubSalesForOrganization(customerId);
   }
 
   return json({ received: true });

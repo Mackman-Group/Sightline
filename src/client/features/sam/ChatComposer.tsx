@@ -11,7 +11,7 @@ export function ChatComposer({
   busy,
   onSend,
   onStop,
-  placeholder = "Ask Sam about your strategy or OpenSEO…",
+  placeholder = "Ask Sam about your strategy or Sightline…",
 }: {
   busy: boolean;
   onSend: (text: string) => void;

@@ -1,5 +1,4 @@
 import { AuthRepository } from "@/server/auth/repositories/AuthRepository";
-import { markDubReferredOrganization } from "@/server/referrals/dub";
 import { slugify, toHex } from "./org-slug";
 
 type HostedUser = {
@@ -19,7 +18,7 @@ type HostedOrganizationCreator = (
 ) => Promise<{ id: string }>;
 
 function getDefaultHostedOrganizationName(user: HostedUser) {
-  const name = user.name?.trim() || user.email.split("@")[0] || "OpenSEO";
+  const name = user.name?.trim() || user.email.split("@")[0] || "Sightline";
   return `${name}'s organization`;
 }
 
@@ -119,16 +118,6 @@ async function createActiveHostedOrganization(
   return { organizationId, role: membership?.role ?? "owner" };
 }
 
-// On every resolution, not just org creation: the signup-time referral pin
-// can land after the org exists (email verification from another location,
-// or BYPASS_EMAIL_VERIFICATION creating the session inside the signup
-// transaction before user.create.after hooks flush), so later logins repair
-// the org pin. No-ops without a user pin, and only ever pins an org the user
-// founded — an invitee's membership never counts.
-async function repairDubReferralPin(userId: string) {
-  await markDubReferredOrganization(userId);
-}
-
 // Picks the org a hosted user should be working in: their last-active org if
 // they still belong to it, else their most recently joined org (so a fresh
 // invite acceptance beats the signup-minted personal organization), else a
@@ -140,14 +129,12 @@ export async function resolveActiveHostedOrganization(
 ): Promise<ActiveHostedOrganization> {
   const existing = await findExistingActiveOrganization(userId);
   if (existing) {
-    await repairDubReferralPin(userId);
     return existing;
   }
   const created = await createActiveHostedOrganization(
     userId,
     createOrganization,
   );
-  await repairDubReferralPin(userId);
   return created;
 }
 
@@ -158,12 +145,7 @@ export async function resolveActiveHostedOrganization(
 export async function resolveExistingActiveHostedOrganization(
   userId: string,
 ): Promise<ActiveHostedOrganization | null> {
-  const existing = await findExistingActiveOrganization(userId);
-  if (!existing) {
-    return null;
-  }
-  await repairDubReferralPin(userId);
-  return existing;
+  return findExistingActiveOrganization(userId);
 }
 
 // Sign-in (session-create hook) variant: same resolution, except a user with
@@ -179,7 +161,6 @@ export async function resolveSignInHostedOrganization(
 ): Promise<ActiveHostedOrganization | null> {
   const existing = await findExistingActiveOrganization(userId);
   if (existing) {
-    await repairDubReferralPin(userId);
     return existing;
   }
 
@@ -188,10 +169,5 @@ export async function resolveSignInHostedOrganization(
     return null;
   }
 
-  const created = await createActiveHostedOrganization(
-    userId,
-    createOrganization,
-  );
-  await repairDubReferralPin(userId);
-  return created;
+  return createActiveHostedOrganization(userId, createOrganization);
 }

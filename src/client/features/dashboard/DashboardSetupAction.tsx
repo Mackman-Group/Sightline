@@ -19,7 +19,7 @@ import { markDashboardCompetitorClicked } from "@/serverFunctions/dashboard";
 import type { DashboardSetupStep } from "@/types/schemas/dashboard";
 import { parseResearchTarget } from "@/shared/researchScope";
 
-const projectPrompt = `Use OpenSEO to set up a separate project for each website below. List my existing projects first and reuse matches so you don’t create duplicates. Set the country and language for each site, and ask me about anything missing.
+const projectPrompt = `Use Sightline to set up a separate project for each website below. List my existing projects first and reuse matches so you don’t create duplicates. Set the country and language for each site, and ask me about anything missing.
 
 Replace this list with my websites:
 - Project name — website — country — language`;
@@ -68,12 +68,12 @@ export function DashboardSetupAction({
     return (
       <div className="max-w-2xl space-y-4">
         <p className="text-sm leading-relaxed text-base-content/65">
-          Paste this prompt into your agent to automatically configure OpenSEO
+          Paste this prompt into your agent to automatically configure Sightline
           for you.
         </p>
         <div className="flex flex-col gap-4 rounded-lg border border-base-300 bg-base-200/25 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-medium">OpenSEO plugin</p>
+            <p className="text-sm font-medium">Sightline plugin</p>
             <p className="mt-1 text-xs text-base-content/60">
               MCP connection + SEO skills
             </p>
@@ -82,9 +82,7 @@ export function DashboardSetupAction({
             <CopyButton
               primary
               value={getAgentSetupPrompt(
-                typeof window === "undefined"
-                  ? "https://app.openseo.so"
-                  : window.location.origin,
+                typeof window === "undefined" ? "" : window.location.origin,
               )}
               label="Copy setup prompt"
               successMessage="Setup prompt copied"

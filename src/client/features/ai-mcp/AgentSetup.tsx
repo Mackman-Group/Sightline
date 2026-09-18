@@ -19,9 +19,7 @@ export function AgentSetup({
 }) {
   const [intent, setIntent] = useState(initialIntent ?? "");
   const prompt = getAgentSetupPrompt(
-    typeof window === "undefined"
-      ? "https://app.openseo.so"
-      : window.location.origin,
+    typeof window === "undefined" ? "" : window.location.origin,
   );
   const Heading = onComplete ? "h1" : "h2";
   const chooseIntent = (answer: "yes" | "no") => {

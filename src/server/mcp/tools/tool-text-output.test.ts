@@ -19,7 +19,7 @@ import { makeGa4ReportResult } from "@/server/features/ga4/services/ga4-test-fix
 import type * as backlinksTargetModule from "@/server/lib/dataforseoBacklinksTarget";
 
 // Verifies that each tool renders its actual row data into the text content
-// block (not just a count), across the tools whose data comes from OpenSEO
+// block (not just a count), across the tools whose data comes from Sightline
 // services rather than the DataForSEO client. Guards against a column wired to
 // the wrong field, which would render a table of only "—".
 

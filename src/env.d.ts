@@ -35,15 +35,8 @@ declare namespace Cloudflare {
     };
     GOOGLE_CLIENT_ID?: string;
     GOOGLE_CLIENT_SECRET?: string;
-    LOOPS_API_KEY?: string;
-    LOOPS_TRANSACTIONAL_VERIFY_EMAIL_ID?: string;
-    LOOPS_TRANSACTIONAL_RESET_PASSWORD_ID?: string;
-    LOOPS_TRANSACTIONAL_INVITATION_ID?: string;
     AUTUMN_SECRET_KEY?: string;
     AUTUMN_WEBHOOK_SECRET?: string;
-    // Dub referral conversion tracking (hosted only); all Dub code no-ops
-    // when unset.
-    DUB_API_KEY?: string;
     // HMAC secret for the operator-only GDPR storage-erasure endpoint.
     GDPR_ERASURE_SECRET?: string;
 
